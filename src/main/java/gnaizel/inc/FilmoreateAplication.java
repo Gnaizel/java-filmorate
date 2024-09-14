@@ -8,11 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FilmoreateAplication {
     private static final Logger log = LoggerFactory.getLogger(FilmoreateAplication.class);
-
-    public static class Main {
-        public static void main(String[] args) {
-            SpringApplication.run(FilmoreateAplication.class, args);
-            log.info("Программа запущена");
-        }
+    public static void main(String[] args) {
+        SpringApplication.run(FilmoreateAplication.class, args);
+        log.info("Программа запущена");
     }
 }
