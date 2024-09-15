@@ -2,6 +2,7 @@ package gnaizel.inc.controller;
 
 import gnaizel.inc.exception.ValidationException;
 import gnaizel.inc.model.Film;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film postFilm(@RequestBody Film film) {
+    public Film postFilm(@Valid @RequestBody Film film) {
         if (films.containsValue(film)) {
             throw new ValidationException("фильм с таким названием уже есть");
         }
@@ -53,7 +54,7 @@ public class FilmController {
     public Film updateFilm(@RequestBody Film film) {
 
         if (!films.containsKey(film.getId())) {
-            throw new ValidationException("пользователя с таким id не существует");
+            throw new ValidationException("Фильма с таким id не существует");
         }
 
         films.replace(film.getId(), film);

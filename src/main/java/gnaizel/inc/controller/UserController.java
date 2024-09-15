@@ -2,6 +2,7 @@ package gnaizel.inc.controller;
 
 import gnaizel.inc.exception.ValidationException;
 import gnaizel.inc.model.User;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,6 @@ public class UserController {
         if (user.getEmail() != null) existingUser.setEmail(user.getEmail());
         if (user.getLogin() != null) existingUser.setLogin(user.getLogin());
         if (user.getName() != null) existingUser.setName(user.getName());
-        if (user.getBirthday() != null) existingUser.setBirthday(user.getBirthday());
 
         if (!Objects.equals(user.getLogin(), existingUser.getLogin())
                 || !Objects.equals(user.getEmail(), existingUser.getEmail())) {
@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
 
         if (user.getLogin() == null || user.getEmail() == null) {
             throw new ValidationException("Поля Login и Email обязательны");
