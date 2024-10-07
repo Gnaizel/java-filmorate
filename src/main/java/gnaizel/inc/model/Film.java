@@ -9,12 +9,13 @@ import lombok.Value;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @Value
 @Builder(toBuilder = true)
 @EqualsAndHashCode(of = "name")
-public class Film {// нет приват полей так как они по умолчанию private и final изза анотации @Value
+public class Film {
     int id;
     @NotBlank(message = "Поле названия не может быть пустым")
     String name;
@@ -24,4 +25,5 @@ public class Film {// нет приват полей так как они по �
     LocalDate releaseDate;
     @NonNull
     Duration duration;
+    Set<User> like;
 }
