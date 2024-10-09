@@ -1,6 +1,5 @@
 package gnaizel.inc.storage.user;
 
-import gnaizel.inc.controller.UserController;
 import gnaizel.inc.exception.NotFoundUserId;
 import gnaizel.inc.exception.ValidationException;
 import gnaizel.inc.model.User;
@@ -15,7 +14,7 @@ import java.util.*;
 @Component
 public class InMemoryUserStorage implements UserStorage {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(InMemoryUserStorage.class);
     private final Map<Long, User> users = new HashMap<>();
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -33,7 +32,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User findUser(long userId) {
-        if (users.containsKey(userId)) throw new NotFoundUserId("NOT_FOUND_USER_ID");
+        if (!users.containsKey(userId)) throw new NotFoundUserId("NOT_FOUND_USER_ID: " + userId);
         return users.get(userId);
     }
 
