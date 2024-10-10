@@ -24,11 +24,10 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public List<User> findUsersById(Set<Long> ids) {
-        List<User> userList = new ArrayList<>();
-        for (long id : ids) {
-                userList.add(users.get(id));
-        }
-        return userList;
+        return ids.stream()
+                .map(users::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     public User findUser(long userId) {

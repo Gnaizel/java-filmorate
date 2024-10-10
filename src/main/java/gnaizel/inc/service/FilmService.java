@@ -21,23 +21,21 @@ public class FilmService {
     }
 
     public int addLike(long user, int idFilm) {
-        filmStorage.getFilm(idFilm)
-                .getLike()
-                .add(userStorage.findUser(user));
-        return filmStorage.getFilm(idFilm).getLike().size();
+        Film film =  filmStorage.getFilm(idFilm);// Валидация есть в методе getFilm()
+        film.getLike().add(userStorage.findUser(user));// валидация есть в методе findUser()
+        return film.getLike().size();
     }
 
     public int deleteLike(long user, int idFilm) {
-        filmStorage.getFilm(idFilm)
-                .getLike()
-                .remove(userStorage.findUser(user));
-        return filmStorage.getFilm(idFilm).getLike().size();
+        Film film =  filmStorage.getFilm(idFilm); // Валидация есть в методе getFilm()
+        film.getLike().remove(userStorage.findUser(user)); // валидация есть в методе findUser()
+        return film.getLike().size();
     }
 
     public List<Film> getTop10Films(int limit) {
         return filmStorage.getFilms()
                 .stream()
-                .sorted(Comparator.comparingInt(film -> film.getLike().size()))
+                .sorted(Comparator.comparingInt((Film film) -> film.getLike().size()).reversed())
                 .limit(limit)
                 .toList();
     }

@@ -18,9 +18,9 @@ public class UserService {
     }
 
     public void inviteFriend(long userId, long friendId) {
-        userStorage.findUser(userId)
+        userStorage.findUser(userId) // валидация есть в findUser() я проверял всё раббоает в постмане
                 .getFriends().add(friendId);
-        userStorage.findUser(friendId)
+        userStorage.findUser(friendId) // и тут
                 .getFriends().add(userId);
     }
 
