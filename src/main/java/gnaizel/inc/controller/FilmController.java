@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -47,7 +48,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public void getTop10(@RequestParam(required = false, defaultValue = "10") Integer count) {
-        filmService.getTop10Films(count);
+    public List<Film> getTop10(@RequestParam(required = false, defaultValue = "10") Integer count) {
+        return filmService.getTop10Films(count);
     }
 }
