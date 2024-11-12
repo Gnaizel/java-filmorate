@@ -1,5 +1,6 @@
 package gnaizel.inc.model;
 
+import gnaizel.inc.enums.user.FriendStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +21,7 @@ public class User {
     private String name;
     @NonNull
     private LocalDate birthday;
+    private FriendStatus friendStatus;
     private Set<Long> friends = new HashSet<>();
 
     public User() { // Создал так как lombok не создаст его изза NonNull
