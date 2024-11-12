@@ -6,9 +6,12 @@
 
 • Пример 1: Получение всех фильмов
 SELECT * FROM films;
+
 • Пример 2: Получение всех пользователей
 SELECT * FROM users;
+
 • Пример 3: Получение топ N самых популярных фильмов
+
 SELECT f.name, COUNT(l.user_di) AS like_count
 FROM films f
 JOIN like l ON f.id = l.film_di
