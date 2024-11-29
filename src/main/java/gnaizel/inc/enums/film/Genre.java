@@ -1,5 +1,14 @@
 package gnaizel.inc.enums.film;
 
-public enum Genre {
-    COMEDY, DRAMA, CARTOON, THRILLER, DOCUMENTARY, ACTION_MOVE
+
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Builder
+public class Genre {
+    private int id;
+    private String name;
 }

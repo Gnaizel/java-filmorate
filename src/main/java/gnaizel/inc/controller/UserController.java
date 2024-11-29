@@ -2,20 +2,25 @@ package gnaizel.inc.controller;
 
 import gnaizel.inc.model.User;
 import gnaizel.inc.service.UserService;
+import gnaizel.inc.storage.user.impl.UserDbStorage;
 import gnaizel.inc.storage.user.UserStorage;
 import jakarta.validation.Valid;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
 public class UserController {
     private final UserStorage userStorage;
     private final UserService userService;
+
+    public UserController(@Qualifier("UserDbStorage")UserDbStorage userStorage, UserService userService) {
+        this.userStorage = userStorage;
+        this.userService = userService;
+    }
 
     @GetMapping("/{id}")
     public User getUserForId(@PathVariable long id) {

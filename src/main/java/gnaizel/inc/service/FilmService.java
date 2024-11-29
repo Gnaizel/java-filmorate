@@ -4,6 +4,7 @@ import gnaizel.inc.model.Film;
 import gnaizel.inc.storage.film.FilmStorage;
 import gnaizel.inc.storage.user.UserStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -15,7 +16,8 @@ public class FilmService {
     private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(@Qualifier("FilmDbStorage")FilmStorage filmStorage,
+                       @Qualifier("UserDbStorage")UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }

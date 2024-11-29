@@ -2,9 +2,12 @@ package gnaizel.inc.controller;
 
 import gnaizel.inc.model.Film;
 import gnaizel.inc.service.FilmService;
+import gnaizel.inc.storage.film.impl.FilmDbStorage;
 import gnaizel.inc.storage.film.FilmStorage;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,10 +15,15 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/films")
-@RequiredArgsConstructor
 public class FilmController {
+    private final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final FilmStorage filmStorage;
     private final FilmService filmService;
+
+    public FilmController(@Qualifier("FilmDbStorage")FilmDbStorage filmStorage, FilmService filmService) {
+        this.filmStorage = filmStorage;
+        this.filmService = filmService;
+    }
 
     @GetMapping("/{id}")
     public Film getFilmForId(@PathVariable int id) {
@@ -29,6 +37,7 @@ public class FilmController {
 
     @PostMapping
     public Film postFilm(@Valid @RequestBody Film film) {
+        log.info(film.toString());
         return filmStorage.postFilm(film);
     }
 

@@ -1,5 +1,14 @@
 package gnaizel.inc.enums.film;
 
-public enum MPA {
-    G,PG,PG_13,R,NC_17
+import lombok.*;
+
+@Getter
+@Setter
+@EqualsAndHashCode
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Builder
+public class MPA {
+    private int id;
+    private String name;
 }

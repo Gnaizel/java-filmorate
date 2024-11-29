@@ -1,8 +1,9 @@
-package gnaizel.inc.storage.user;
+package gnaizel.inc.storage.user.impl;
 
 import gnaizel.inc.exception.NotFoundUserId;
 import gnaizel.inc.exception.ValidationException;
 import gnaizel.inc.model.User;
+import gnaizel.inc.storage.user.UserStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserStorage.class);
     private final Map<Long, User> users = new HashMap<>();
-    static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public Set<User> getUsers() {
         log.debug("Вернул юзеров");

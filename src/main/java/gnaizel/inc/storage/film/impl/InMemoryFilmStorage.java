@@ -1,9 +1,10 @@
-package gnaizel.inc.storage.film;
+package gnaizel.inc.storage.film.impl;
 
 import gnaizel.inc.controller.FilmController;
 import gnaizel.inc.exception.NotFoundFilmId;
 import gnaizel.inc.exception.ValidationException;
 import gnaizel.inc.model.Film;
+import gnaizel.inc.storage.film.FilmStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Component
-public class InMemoryFilmStorage implements FilmStorage{
+public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
 
