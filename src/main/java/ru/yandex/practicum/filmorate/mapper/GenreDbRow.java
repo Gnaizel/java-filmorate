@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dal.mapper;
+package ru.yandex.practicum.filmorate.mapper;
 
 import ru.yandex.practicum.filmorate.enums.film.Genre;
 import lombok.AllArgsConstructor;
