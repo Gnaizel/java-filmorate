@@ -12,7 +12,7 @@
     </parent>
 
     <groupId>org.example</groupId>
-    <artifactId>Filmorate1</artifactId>
+    <artifactId>java-filmorate</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
