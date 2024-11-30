@@ -3,7 +3,6 @@ package gnaizel.inc.controller;
 import gnaizel.inc.model.Film;
 import gnaizel.inc.service.FilmService;
 import gnaizel.inc.storage.film.impl.FilmDbStorage;
-import gnaizel.inc.storage.film.FilmStorage;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,7 @@ public class FilmController {
 
     @PostMapping
     public Film postFilm(@Valid @RequestBody Film film) {
+        log.info(film.toString());
         return filmService.postFilm(film);
     }
 

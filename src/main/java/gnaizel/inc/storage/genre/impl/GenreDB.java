@@ -29,7 +29,6 @@ public class GenreDB extends BaseDbStorage<Genre> implements GenreStorage {
             return Collections.singleton(genre);
     }
 
-
     @Override
     public List<Genre> findAll() {
         String sqlQuery = "SELECT ID, NAME FROM GENRE";

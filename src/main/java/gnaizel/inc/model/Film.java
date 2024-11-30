@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,7 +18,7 @@ public class Film {
     String name;
     @NotBlank(message = "Поле описания не может быть пустым ")
     String description;
-    Set<Genre> genre;
+    Set<Genre> genres;
     @NotNull
     MPA mpa;
     @NotNull

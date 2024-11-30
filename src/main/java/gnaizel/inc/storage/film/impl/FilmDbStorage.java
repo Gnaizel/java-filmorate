@@ -109,7 +109,7 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
                 film.getReleaseDate(),
                 String.valueOf(film.getDuration()));
         film.setId(filmid);
-        saveGenres(film);
+        insertFilmGenre(film);
         return getFilm((int) filmid);
     }
 
@@ -123,17 +123,15 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
                 film.getId());
         String sqlQueryForDeleteGenres = "DELETE FROM GENRE_FILM WHERE FILM_ID = ?";
         jdbc.update(sqlQueryForDeleteGenres, film.getId());
-
-        saveGenres(film);
-
+        insertFilmGenre(film);
         return getFilm(film.getId());
     }
 
-    private void saveGenres(Film film) {
-        if (film.getGenre() != null && !film.getGenre().isEmpty()) {
+    private void insertFilmGenre(Film film) {
+        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
             jdbc.update("DELETE FROM GENRE_FILM WHERE FILM_ID = ?", film.getId());
 
-            List<Genre> genres = new ArrayList<>(film.getGenre());
+            List<Genre> genres = new ArrayList<>(film.getGenres());
             jdbc.batchUpdate("INSERT INTO GENRE_FILM(FILM_ID, GENRE_ID) VALUES (?, ?)", new BatchPreparedStatementSetter() {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {

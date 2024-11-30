@@ -21,11 +21,9 @@ CREATE TABLE IF NOT EXISTS film (
        id INTEGER AUTO_INCREMENT PRIMARY KEY,
        name VARCHAR(255),
        description TEXT,
-       genre_id INTEGER,
        mpa_id INTEGER,
        release_date DATE,
        duration VARCHAR(50),
-       FOREIGN KEY (genre_id) REFERENCES genre(id),
        FOREIGN KEY (mpa_id) REFERENCES mpa(id)
 );
 
