@@ -5,10 +5,10 @@ import gnaizel.inc.enums.film.Genre;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Set;
 
 public interface GenreStorage {
-    Optional<Genre> findGenreById(int id);
+    Set<Genre> findGenreById(int id);
 
     Collection<Genre> findAll();
 

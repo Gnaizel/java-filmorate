@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/films")
@@ -31,13 +30,13 @@ public class FilmController {
     }
 
     @GetMapping
-    public Set<Film> getFilms() {
+    public List<Film> getFilms() {
         return filmStorage.getFilms();
     }
 
     @PostMapping
     public Film postFilm(@Valid @RequestBody Film film) {
-        log.info(film.toString());
+//        log.info(film.toString());
         return filmStorage.postFilm(film);
     }
 
@@ -46,9 +45,9 @@ public class FilmController {
         return filmStorage.updateFilm(film);
     }
 
-    @PostMapping("/{id}/like/{userId}")
-    public int likeFilm(@PathVariable int id, @PathVariable long userId) {
-        return filmService.addLike(userId, id);
+    @PutMapping("/{id}/like/{userId}")
+    public void likeFilm(@PathVariable int id, @PathVariable long userId) {
+        filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")

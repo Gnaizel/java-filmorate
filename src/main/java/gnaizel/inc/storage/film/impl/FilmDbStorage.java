@@ -1,22 +1,23 @@
 package gnaizel.inc.storage.film.impl;
 
+import gnaizel.inc.enums.film.Genre;
 import gnaizel.inc.exception.ValidationException;
 import gnaizel.inc.model.Film;
 import gnaizel.inc.storage.BaseDbStorage;
 import gnaizel.inc.storage.film.FilmStorage;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.ZoneId;
+import java.util.*;
 
 @Repository()
 @Qualifier("FilmDbStorage")
@@ -24,10 +25,9 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
     private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
     private final String GET_ALL_FILMS_QUERY = "SELECT * FROM film;";
     private final String POST_FILM_QUERY = "INSERT INTO film(name, description, mpa_id, release_date, duration) " +
-            "VALUES (?, ?, ?, ?, ?, ?) ";
+            "VALUES (?, ?, ?, ?, ?) ";
     private final String UPDATE_FILM_QUERY = "UPDATE film SET name = ?," +
             " description = ?," +
-            " genre_id = ?," +
             " mpa_id = ? ," +
             " release_date = ?," +
             " duration = ?" +
@@ -39,8 +39,44 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
     }
 
     @Override
-    public Set<Film> getFilms() {
-        return new HashSet<>(findAll(GET_ALL_FILMS_QUERY));
+    public void addLike(int filmId, long userId) {
+        String sqlQuery = "INSERT INTO \"like\" (FILM_ID, USER_ID) " +
+                "VALUES (?, ?)";
+
+        jdbc.update(sqlQuery,
+                filmId,
+                userId);
+    }
+
+    @Override
+    public void deleteLike(int film_id, long userId) {
+        String sqlQuery = "DELETE FROM \"like\" WHERE USER_ID = ?";
+        jdbc.update(sqlQuery, userId);
+    }
+
+    @Override
+    public List<Film> getPopular(long count) {
+        List<Film> films;
+
+        String sqlQueryWithEmpty = "SELECT FILM.ID, FILM.NAME, DESCRIPTION, RELEASE_DATE, DURATION, M.MPA_ID, M.NAME " +
+                "FROM FILM " +
+                "LEFT JOIN \"like\" FL ON FILM.ID = FL.FILM_ID " +
+                "LEFT JOIN MPA M ON M.MPA_ID = FILM.MPA_ID " +
+                "GROUP BY FILM.ID, FL.FILM_ID IN ( " +
+                "SELECT FILM_ID " +
+                "FROM \"like\" " +
+                ") " +
+                "ORDER BY COUNT(FL.FILM_ID) DESC " +
+                "LIMIT ?";
+
+        films = findAll(sqlQueryWithEmpty, count);
+
+        return films;
+    }
+
+    @Override
+    public List<Film> getFilms() {
+        return findAll(GET_ALL_FILMS_QUERY);
     }
 
     @Override
@@ -56,13 +92,14 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
                                 .toLocalDate()))) {
             throw new ValidationException("Дата релиза не может быть ранеьше 1895г 28 дек");
         }
-        long filmid = insert(POST_FILM_QUERY,
+        int filmid = (int) insert(POST_FILM_QUERY,
                 film.getName(),
                 film.getDescription(),
                 film.getMpa().getId(),
                 film.getReleaseDate(),
                 String.valueOf(film.getDuration()));
-        updateGenres(film);
+        film.setId(filmid);
+        saveGenres(film);
         return getFilm((int) filmid);
     }
 
@@ -71,29 +108,37 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
         update(UPDATE_FILM_QUERY, film.getName(),
                 film.getDescription(),
                 film.getMpa().getId(),
-                Date.from(Instant.from(film.getReleaseDate())),
+                Date.from(film.getReleaseDate().atStartOfDay(ZoneId.systemDefault()).toInstant()),
                 String.valueOf(film.getDuration()),
                 film.getId());
-        String sqlQueryForDeleteGenres = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
+        String sqlQueryForDeleteGenres = "DELETE FROM GENRE_FILM WHERE FILM_ID = ?";
         jdbc.update(sqlQueryForDeleteGenres, film.getId());
 
-        updateGenres(film);
+        saveGenres(film);
 
         return getFilm(film.getId());
     }
 
-    private void updateGenres(Film film) {
-        if (film.getGenre() != null) {
-            String sqlQueryForGenres = "INSERT INTO FILM_GENRE(FILM_ID, GENRE_ID) " +
-                    "VALUES (?, ?)";
-            jdbc.batchUpdate(
-                    sqlQueryForGenres, film.getGenre(), film.getGenre().size(),
-                    (ps, genre) -> {
-                        ps.setInt(1, film.getId());
-                        ps.setInt(2, genre.getId());
-                    });
-        } else film.setGenre(new HashSet<>());
+    private void saveGenres(Film film) {
+        if (film.getGenre() != null && !film.getGenre().isEmpty()) {
+            jdbc.update("DELETE FROM GENRE_FILM WHERE FILM_ID = ?", film.getId());
+
+            List<Genre> genres = new ArrayList<>(film.getGenre());
+            jdbc.batchUpdate("INSERT INTO GENRE_FILM(FILM_ID, GENRE_ID) VALUES (?, ?)", new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    ps.setInt(1, film.getId());
+                    ps.setInt(2, genres.get(i).getId());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return genres.size();
+                }
+            });
+        }
     }
+
 
     @Override
     public Film getFilm(int filmId) {

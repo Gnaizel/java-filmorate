@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -22,23 +21,15 @@ public class FilmService {
         this.userStorage = userStorage;
     }
 
-    public int addLike(long user, int idFilm) {
-        Film film =  filmStorage.getFilm(idFilm);// Валидация есть в методе getFilm()
-        film.getLike().add(userStorage.findUser(user));// валидация есть в методе findUser()
-        return film.getLike().size();
+    public void addLike(int idFilm, long userId) {
+        filmStorage.addLike(idFilm, userId);
     }
 
-    public int deleteLike(long user, int idFilm) {
-        Film film =  filmStorage.getFilm(idFilm); // Валидация есть в методе getFilm()
-        film.getLike().remove(userStorage.findUser(user)); // валидация есть в методе findUser()
-        return film.getLike().size();
+    public void deleteLike(long userId, int idFilm) {
+        filmStorage.deleteLike(idFilm,  userId);
     }
 
     public List<Film> getTop10Films(int limit) {
-        return filmStorage.getFilms()
-                .stream()
-                .sorted(Comparator.comparingInt((Film film) -> film.getLike().size()).reversed())
-                .limit(limit)
-                .toList();
+        return filmStorage.getPopular(limit);
     }
 }

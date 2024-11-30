@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -20,10 +19,10 @@ public class Film {
     @NotBlank(message = "Поле описания не может быть пустым ")
     String description;
     Set<Genre> genre;
+    @NotNull
     MPA mpa;
     @NotNull
     LocalDate releaseDate;
     @NonNull
     int duration;
-    Set<User> like;
 }

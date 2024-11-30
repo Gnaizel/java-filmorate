@@ -1,14 +1,16 @@
 package gnaizel.inc.enums.film;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@AllArgsConstructor
-@RequiredArgsConstructor
+import java.io.Serializable;
+
+@Data
 @Builder
-public class MPA {
+public class MPA implements Serializable {
+    @Getter
     private int id;
     private String name;
+
 }

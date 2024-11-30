@@ -10,19 +10,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
 
-    public Set<Film> getFilms() {
+    public List<Film> getFilms() {
         log.debug("Вернул список фильмов");
-        return new HashSet<>(films.values());
+        return films.values().stream().toList();
     }
 
     public Film getFilm(int idFilm) {
@@ -63,6 +60,21 @@ public class InMemoryFilmStorage implements FilmStorage {
         films.replace(film.getId(), film);
         log.debug("Отредактирован фильм {}", film.getName());
         return film;
+    }
+
+    @Override
+    public void addLike(int film_id, long userId) {
+
+    }
+
+    @Override
+    public void deleteLike(int film_id, long userId) {
+
+    }
+
+    @Override
+    public List<Film> getPopular(long count) {
+        return List.of();
     }
 
     private int nextIdCreate() {

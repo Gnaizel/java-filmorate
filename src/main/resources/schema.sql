@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS genre (
 );
 
 CREATE TABLE IF NOT EXISTS mpa (
-       id INTEGER PRIMARY KEY,
+       id INTEGER AUTO_INCREMENT PRIMARY KEY,
        name VARCHAR(255)
 );
 
@@ -27,6 +27,17 @@ CREATE TABLE IF NOT EXISTS film (
        duration VARCHAR(50),
        FOREIGN KEY (genre_id) REFERENCES genre(id),
        FOREIGN KEY (mpa_id) REFERENCES mpa(id)
+);
+
+create table IF NOT EXISTS GENRE_FILM (
+    FILM_ID  INTEGER not null,
+    GENRE_ID INTEGER not null,
+    constraint "GENRE_FILM_pk"
+        primary key (FILM_ID, GENRE_ID),
+    constraint "GENRE_FILM_FILM_FILM_ID_fk"
+        foreign key (FILM_ID) references FILM (ID),
+    constraint "GENRE_FILM_GENRE_ID_fk"
+        foreign key (GENRE_ID) references GENRE (ID)
 );
 
 create table IF NOT EXISTS GENRE_FILM

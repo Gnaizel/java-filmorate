@@ -1,55 +1,55 @@
 package gnaizel.inc.storage.genre.impl;
 
 import gnaizel.inc.enums.film.Genre;
+import gnaizel.inc.storage.BaseDbStorage;
 import gnaizel.inc.storage.genre.GenreStorage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Repository
-@RequiredArgsConstructor
-public class GenreDB implements GenreStorage {
+public class GenreDB extends BaseDbStorage<Genre> implements GenreStorage {
+    private final String  FIND_GENRE_BY_ID = "SELECT * FROM genre WHERE id = ?";
 
-    private final JdbcTemplate jdbcTemplate;
-
-    @Override
-    public Optional<Genre> findGenreById(int id) {
-        String sqlQuery = "SELECT ID, NAME FROM GENRE WHERE ID = ?";
-
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
-        if (genreRows.next()) {
-            Genre genre = Genre.builder()
-                    .id(genreRows.getInt("ID"))
-                    .name(genreRows.getString("NAME"))
-                    .build();
-            log.info("Найден жанр {} с названием {} ", genreRows.getInt("ID"),
-                    genreRows.getString("NAME"));
-            return Optional.of(genre);
-        } else {
-            log.info("Жанр с id {} не найден", id);
-            return Optional.empty();
-        }
+    public GenreDB(JdbcTemplate jdbc, RowMapper<Genre> rowMapper) {
+        super(jdbc, rowMapper);
     }
 
     @Override
-    public Collection<Genre> findAll() {
+    public Set<Genre> findGenreById(int id) {
+        try {
+            Genre genre = findOne(FIND_GENRE_BY_ID, id)
+                    .orElseThrow(() -> new NoSuchElementException("Жанр с id " + id + " не найден"));
+            return Collections.singleton(genre);
+        } catch (NoSuchElementException e) {
+            log.info(e.getMessage());
+            return Collections.emptySet();
+        }
+    }
+
+
+    @Override
+    public List<Genre> findAll() {
         String sqlQuery = "SELECT ID, NAME FROM GENRE";
-        return jdbcTemplate.query(sqlQuery, this::mapRowToGenre);
+        return findAll(sqlQuery);
     }
 
     @Override
     public Genre mapRowToGenre(ResultSet resultSet, int i) throws SQLException {
-        return Genre.builder()
-                .id(resultSet.getInt("ID"))
-                .name(resultSet.getString("NAME"))
-                .build();
+        int id = resultSet.getInt("ID");
+        String name = resultSet.getString("name");
+        try {
+            return Genre.builder().id(id).name(name).build();
+        } catch (IndexOutOfBoundsException e) {
+            log.warn("Invalid Genre ID: {}", id);
+            return null;
+        }
     }
+
 }
