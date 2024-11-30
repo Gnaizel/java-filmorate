@@ -16,33 +16,30 @@ import java.util.List;
 @RequestMapping("/films")
 public class FilmController {
     private final Logger log = LoggerFactory.getLogger(FilmController.class);
-    private final FilmStorage filmStorage;
     private final FilmService filmService;
 
     public FilmController(@Qualifier("FilmDbStorage")FilmDbStorage filmStorage, FilmService filmService) {
-        this.filmStorage = filmStorage;
         this.filmService = filmService;
     }
 
     @GetMapping("/{id}")
     public Film getFilmForId(@PathVariable int id) {
-        return filmStorage.getFilm(id);
+        return filmService.getFilmForId(id);
     }
 
     @GetMapping
     public List<Film> getFilms() {
-        return filmStorage.getFilms();
+        return filmService.getFilms();
     }
 
     @PostMapping
     public Film postFilm(@Valid @RequestBody Film film) {
-//        log.info(film.toString());
-        return filmStorage.postFilm(film);
+        return filmService.postFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
-        return filmStorage.updateFilm(film);
+        return filmService.updateFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")

@@ -1,8 +1,11 @@
 package gnaizel.inc.controller;
 
 import gnaizel.inc.enums.film.Genre;
+import gnaizel.inc.service.GenreService;
 import gnaizel.inc.storage.genre.impl.GenreDB;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,15 +15,16 @@ import java.util.Set;
 @RestController
 @RequestMapping("/genres")
 public class GenreController {
-    GenreDB genreDB;
+    @Autowired
+    GenreService genreService;
 
     @GetMapping
     public List<Genre> getGenres() {
-        return genreDB.findAll();
+        return genreService.getGenres();
     }
 
     @GetMapping("/{id}")
-    public Set<Genre> getGenreById(int id) {
-        return genreDB.findGenreById(id);
+    public Set<Genre> getGenreById(@PathVariable int id) {
+        return genreService.getGenreById(id);
     }
 }

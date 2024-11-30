@@ -75,18 +75,9 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
                 "    genre_film fg ON f.id = fg.film_id\n" +
                 "LEFT JOIN\n" +
                 "    genre g ON fg.genre_id = g.id\n" +
+                "ORDER BY \n" +
+                "    likes_count DESC\n" +
                 "LIMIT ?;\n";
-
-//        String sqlQueryWithEmpty = "SELECT FILM.ID, FILM.NAME, DESCRIPTION, RELEASE_DATE, DURATION, M.ID, M.NAME " +
-//                "FROM FILM " +
-//                "LEFT JOIN \"like\" FL ON FILM.ID = FL.FILM_ID " +
-//                "LEFT JOIN MPA M ON M.ID = FILM.MPA_ID " +
-//                "GROUP BY FILM.ID, FL.FILM_ID IN ( " +
-//                "SELECT FILM_ID " +
-//                "FROM \"like\" " +
-//                ") " +
-//                "ORDER BY COUNT(FL.FILM_ID) DESC " +
-//                "LIMIT ?";
 
         films = findAll(sqlQueryWithEmpty, count);
 

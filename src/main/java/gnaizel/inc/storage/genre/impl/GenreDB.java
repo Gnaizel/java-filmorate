@@ -1,6 +1,7 @@
 package gnaizel.inc.storage.genre.impl;
 
 import gnaizel.inc.enums.film.Genre;
+import gnaizel.inc.exception.NotFaundGenre;
 import gnaizel.inc.storage.BaseDbStorage;
 import gnaizel.inc.storage.genre.GenreStorage;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +26,11 @@ public class GenreDB extends BaseDbStorage<Genre> implements GenreStorage {
     public Set<Genre> findGenreById(int id) {
         try {
             Genre genre = findOne(FIND_GENRE_BY_ID, id)
-                    .orElseThrow(() -> new NoSuchElementException("Жанр с id " + id + " не найден"));
+                    .orElseThrow(() -> new NotFaundGenre("Жанр с id " + id + " не найден"));
             return Collections.singleton(genre);
-        } catch (NoSuchElementException e) {
+        } catch (NotFaundGenre e) {
             log.info(e.getMessage());
-            return Collections.emptySet();
+            return null;
         }
     }
 
