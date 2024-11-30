@@ -22,28 +22,28 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film getFilmForId(@PathVariable int id) {
+    public Film getById(@PathVariable int id) {
         return filmService.getFilmForId(id);
     }
 
     @GetMapping
-    public List<Film> getFilms() {
+    public List<Film> findAll() {
         return filmService.getFilms();
     }
 
     @PostMapping
-    public Film postFilm(@Valid @RequestBody Film film) {
+    public Film create(@Valid @RequestBody Film film) {
         log.info(film.toString());
         return filmService.postFilm(film);
     }
 
     @PutMapping
-    public Film updateFilm(@RequestBody Film film) {
+    public Film put(@RequestBody Film film) {
         return filmService.updateFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void likeFilm(@PathVariable int id, @PathVariable long userId) {
+    public void putLike(@PathVariable int id, @PathVariable long userId) {
         filmService.addLike(id, userId);
     }
 
@@ -53,7 +53,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getTop10(@RequestParam(required = false, defaultValue = "10") Integer count) {
+    public List<Film> getMostRatedFilms(@RequestParam(required = false, defaultValue = "10") Integer count) {
         return filmService.getTop10Films(count);
     }
 }
