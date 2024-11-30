@@ -27,4 +27,16 @@ public class ErrorHandler {
     public Map<String, String> noFoundUser(NotFoundUserId e) {
         return Map.of("Ошибка валидации ID ", e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    public Map<String, String> notFoundGenre(NotFaundGenre e) {
+        return Map.of("Ошибка валидации ID", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    public Map<String, String> notFoundMpa(NotFaundMpaID e) {
+        return Map.of("Ошибка валидации ID", e.getMessage());
+    }
 }

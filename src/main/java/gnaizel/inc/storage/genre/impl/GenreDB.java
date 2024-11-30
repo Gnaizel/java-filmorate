@@ -24,14 +24,9 @@ public class GenreDB extends BaseDbStorage<Genre> implements GenreStorage {
 
     @Override
     public Set<Genre> findGenreById(int id) {
-        try {
             Genre genre = findOne(FIND_GENRE_BY_ID, id)
                     .orElseThrow(() -> new NotFaundGenre("Жанр с id " + id + " не найден"));
             return Collections.singleton(genre);
-        } catch (NotFaundGenre e) {
-            log.info(e.getMessage());
-            return null;
-        }
     }
 
 
