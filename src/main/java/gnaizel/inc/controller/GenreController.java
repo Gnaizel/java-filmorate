@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/genre")
+@RequestMapping("/genres")
 public class GenreController {
     GenreDB genreDB;
 
