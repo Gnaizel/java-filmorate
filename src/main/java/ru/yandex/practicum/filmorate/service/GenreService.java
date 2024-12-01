@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.enums.film.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+
 import java.util.List;
 
 @Slf4j

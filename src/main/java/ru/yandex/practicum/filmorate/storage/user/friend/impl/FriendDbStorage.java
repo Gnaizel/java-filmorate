@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.NotFoundUserId;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.friend.FriendStorage;
 
@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -28,13 +29,19 @@ public class FriendDbStorage implements FriendStorage {
             jdbc.update(sql, userId, friendId);
             return friendId;
         } catch (DataAccessException e) {
-            throw new ValidationException(e.getMessage()) ;
+            throw new NotFoundUserId(e.getMessage());
         }
     }
 
     @Override
+    public Set<User> getCommonFriends(long id, long friendId) {
+        String sql = "SELECT * FROM USERS u, friend f, friend o WHERE u.ID = f.FRIEND_ID AND u.ID = o.FRIEND_ID AND f.USER_ID = ? AND o.USER_ID = ? ;";
+        return jdbc.query(sql, (resultSet, rowNum) -> makeUser(resultSet), id, friendId).stream().collect(Collectors.toSet());
+    }
+
+    @Override
     public Set<User> getFriendsById(long id) {
-        String sql = "SELECT u.* FROM friend f JOIN USERS U on U.ID = f.FRIEND_ID WHERE f.USER_ID = ?";
+        String sql = "SELECT u.* FROM friend f JOIN USERS U on U.ID = f.FRIEND_ID WHERE f.USER_ID = ? ;";
         return new HashSet<>(jdbc.query(sql, (resultSet, rowNum) -> makeUser(resultSet), id));
     }
 

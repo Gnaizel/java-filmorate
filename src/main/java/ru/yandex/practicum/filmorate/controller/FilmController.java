@@ -33,7 +33,6 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        log.info(film.toString());
         return filmService.postFilm(film);
     }
 

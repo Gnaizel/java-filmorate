@@ -139,10 +139,10 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
         if (film.getGenres() != null && !film.getGenres().isEmpty()) {
             jdbc.update("DELETE FROM GENRE_FILM WHERE FILM_ID = ?", film.getId());
 
-                Set<Integer> genreIds = film.getGenres().stream()
-            .map(Genre::getId)
-            .filter(id -> id <= 20)
-            .collect(Collectors.toSet());
+            Set<Integer> genreIds = film.getGenres().stream()
+                    .map(Genre::getId)
+                    .filter(id -> id <= 20)
+                    .collect(Collectors.toSet());
 
             if (film.getGenres().stream().anyMatch(genre -> genre.getId() > 20)) {
                 throw new ValidationException("ID жанра не может быть больше 20");

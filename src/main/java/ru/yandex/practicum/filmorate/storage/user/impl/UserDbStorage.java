@@ -36,7 +36,7 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
 
     @Override
     public User findUser(long userId) {
-        String findUserById = "SELECT * FROM users WHERE id = ? ";
+        String findUserById = "SELECT * FROM users WHERE id = ? ;";
         Optional<User> user = findOne(findUserById, userId);
         if (user.isEmpty()) {
             throw new NotFoundUserId("USER_ID_NOT_FOUND");
@@ -94,11 +94,11 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
 
         String createUserQuery = "INSERT INTO users(email, login, name, birthday) " +
                 "VALUES (?, ?, ?, ?);";
-        long userid = insert(createUserQuery, user.getEmail(),
+        user.setId(insert(createUserQuery, user.getEmail(),
                 user.getLogin(),
                 user.getName(),
-                Date.valueOf(user.getBirthday()));
-        return findUser(userid);
+                Date.valueOf(user.getBirthday())));
+        return user;
     }
 
     @Override

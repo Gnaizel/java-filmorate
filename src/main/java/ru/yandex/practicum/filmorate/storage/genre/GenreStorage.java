@@ -5,7 +5,6 @@ import ru.yandex.practicum.filmorate.enums.film.Genre;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
 
 public interface GenreStorage {
     Genre findGenreById(int id);
