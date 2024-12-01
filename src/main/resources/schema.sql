@@ -51,12 +51,11 @@ create table IF NOT EXISTS GENRE_FILM
 );
 
 CREATE TABLE IF NOT EXISTS friend (
-       id INTEGER PRIMARY KEY,
-       user_id_1 INTEGER,
-       user_id_2 INTEGER,
-       status_id INTEGER,
-       FOREIGN KEY (user_id_1) REFERENCES users(id),
-       FOREIGN KEY (user_id_2) REFERENCES users(id)
+       USER_ID INTEGER,
+       FRIEND_ID INTEGER,
+       FOREIGN KEY (USER_ID) REFERENCES users(id),
+       FOREIGN KEY (FRIEND_ID) REFERENCES users(id),
+       primary key (USER_ID)
 );
 
 CREATE TABLE IF NOT EXISTS "like" (

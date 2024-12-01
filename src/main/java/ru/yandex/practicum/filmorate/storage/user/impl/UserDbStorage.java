@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.user.impl;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -13,9 +14,11 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @Qualifier("UserDbStorage")
+@Primary
 public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
 
     public UserDbStorage(JdbcTemplate jdbc, RowMapper<User> rowMapper) {
@@ -33,7 +36,7 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
 
     @Override
     public User findUser(long userId) {
-        String findUserById = "SELECT * FROM users WHERE id = ?;";
+        String findUserById = "SELECT * FROM users WHERE id = ? ";
         Optional<User> user = findOne(findUserById, userId);
         if (user.isEmpty()) {
             throw new NotFoundUserId("USER_ID_NOT_FOUND");
@@ -101,6 +104,7 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
     @Override
     public Set<User> getUsers() {
         String findAllUserQuery = "SELECT * FROM users;";
-        return new HashSet<>(findAll(findAllUserQuery));
+        return findAll(findAllUserQuery).stream()
+                .sorted(Comparator.comparing(User::getId)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }

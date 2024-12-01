@@ -18,6 +18,8 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository()
 @Qualifier("FilmDbStorage")
@@ -82,8 +84,16 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
     @Override
     public Film postFilm(Film film) {
 
+        if (film.getMpa().getId() > 8) {
+            throw new ValidationException("Не корректное поле рейтинга");
+        }
+
         if (film.getDescription().length() > 200) {
             throw new ValidationException("Описание должно быть меньше 200 символов");
+        }
+
+        if (film.getDuration() < 0) {
+            throw new ValidationException("Не кореетное поле Продолжительности фильма: " + film.getDuration());
         }
 
         if (film.getReleaseDate()
@@ -128,6 +138,15 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
     private void insertFilmGenre(Film film) {
         if (film.getGenres() != null && !film.getGenres().isEmpty()) {
             jdbc.update("DELETE FROM GENRE_FILM WHERE FILM_ID = ?", film.getId());
+
+                Set<Integer> genreIds = film.getGenres().stream()
+            .map(Genre::getId)
+            .filter(id -> id <= 20)
+            .collect(Collectors.toSet());
+
+            if (film.getGenres().stream().anyMatch(genre -> genre.getId() > 20)) {
+                throw new ValidationException("ID жанра не может быть больше 20");
+            }
 
             List<Genre> genres = new ArrayList<>(film.getGenres());
             jdbc.batchUpdate("INSERT INTO GENRE_FILM(FILM_ID, GENRE_ID) VALUES (?, ?)", new BatchPreparedStatementSetter() {

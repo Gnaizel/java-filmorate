@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import ru.yandex.practicum.filmorate.enums.user.FriendStatus;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -21,7 +20,6 @@ public class User {
     private String name;
     @NonNull
     private LocalDate birthday;
-    private FriendStatus friendStatus;
     private Set<Long> friends = new HashSet<>();
 
     public User() { // Создал так как lombok не создаст его изза NonNull

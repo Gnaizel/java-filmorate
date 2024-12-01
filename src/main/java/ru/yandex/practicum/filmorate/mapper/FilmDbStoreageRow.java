@@ -11,8 +11,10 @@ import ru.yandex.practicum.filmorate.storage.mpa.impl.MpaDbStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -39,7 +41,9 @@ public class FilmDbStoreageRow implements RowMapper<Film> {
         String sqlQuery = "select * from GENRE_FILM as fg " +
                 "join genre as g on g.id = fg.genre_id " +
                 "where fg.film_id = ? order by genre_id";
-        return new HashSet<>(jdbc.query(sqlQuery, this::makeGenre, filmId));
+        return jdbc.query(sqlQuery, this::makeGenre, filmId).stream()
+                .sorted(Comparator.comparing(Genre::getId))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {

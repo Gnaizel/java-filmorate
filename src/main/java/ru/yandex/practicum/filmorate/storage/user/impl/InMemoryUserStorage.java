@@ -15,6 +15,7 @@ import java.util.*;
 public class InMemoryUserStorage implements UserStorage {
 
     private final Logger log = LoggerFactory.getLogger(InMemoryUserStorage.class);
+
     private final Map<Long, User> users = new HashMap<>();
 
     public Set<User> getUsers() {
