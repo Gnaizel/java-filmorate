@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
-import ru.yandex.practicum.filmorate.enums.user.FriendStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import ru.yandex.practicum.filmorate.enums.user.FriendStatus;
 
 import java.time.LocalDate;
 import java.util.HashSet;

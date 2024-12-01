@@ -12,7 +12,7 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public Map<String,String> validationError(ValidationException e) {
+    public Map<String, String> validationError(ValidationException e) {
         return Map.of("Ошибка валидации ", e.getMessage());
     }
 

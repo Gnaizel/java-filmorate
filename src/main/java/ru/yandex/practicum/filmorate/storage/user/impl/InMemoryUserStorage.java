@@ -1,12 +1,12 @@
 package ru.yandex.practicum.filmorate.storage.user.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundUserId;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -14,7 +14,7 @@ import java.util.*;
 @Component
 public class InMemoryUserStorage implements UserStorage {
 
-    private static final Logger log = LoggerFactory.getLogger(InMemoryUserStorage.class);
+    private final Logger log = LoggerFactory.getLogger(InMemoryUserStorage.class);
     private final Map<Long, User> users = new HashMap<>();
 
     public Set<User> getUsers() {

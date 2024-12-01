@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.model;
 
-import ru.yandex.practicum.filmorate.enums.film.Genre;
-import ru.yandex.practicum.filmorate.enums.film.MPA;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import ru.yandex.practicum.filmorate.enums.film.Genre;
+import ru.yandex.practicum.filmorate.enums.film.MPA;
 
 import java.time.LocalDate;
 import java.util.Set;

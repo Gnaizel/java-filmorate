@@ -1,13 +1,13 @@
 package ru.yandex.practicum.filmorate.mapper;
 
-import ru.yandex.practicum.filmorate.enums.film.Genre;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.mpa.impl.MpaDbStorage;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.enums.film.Genre;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.mpa.impl.MpaDbStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +21,7 @@ public class FilmDbStoreageRow implements RowMapper<Film> {
     MpaDbStorage mpaStorage;
     @Autowired
     JdbcTemplate jdbc;
+
     @Override
     public Film mapRow(ResultSet resultSet, int numRow) throws SQLException {
         return Film.builder()

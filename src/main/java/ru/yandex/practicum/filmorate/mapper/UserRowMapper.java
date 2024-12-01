@@ -1,15 +1,15 @@
 package ru.yandex.practicum.filmorate.mapper;
 
-import ru.yandex.practicum.filmorate.enums.user.FriendStatus;
-import ru.yandex.practicum.filmorate.model.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.enums.user.FriendStatus;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class UserDbStoreageRow implements RowMapper<User> {
+public class UserRowMapper implements RowMapper<User> {
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();
@@ -18,6 +18,7 @@ public class UserDbStoreageRow implements RowMapper<User> {
         user.setLogin(rs.getString("login"));
         user.setName(rs.getString("name"));
         user.setBirthday(rs.getDate("birthday").toLocalDate());
-        user.setFriendStatus(FriendStatus.values()[rs.getInt("friend_status_id")]);        return user;
+        user.setFriendStatus(FriendStatus.values()[rs.getInt("friend_status_id")]);
+        return user;
     }
 }

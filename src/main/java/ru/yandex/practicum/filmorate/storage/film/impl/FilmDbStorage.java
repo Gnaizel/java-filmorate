@@ -1,38 +1,27 @@
 package ru.yandex.practicum.filmorate.storage.film.impl;
 
-import ru.yandex.practicum.filmorate.enums.film.Genre;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.BaseDbStorage;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.enums.film.Genre;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.BaseDbStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Repository()
 @Qualifier("FilmDbStorage")
 public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
-    private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
-    private final String GET_ALL_FILMS_QUERY = "SELECT * FROM film;";
-    private final String POST_FILM_QUERY = "INSERT INTO film(name, description, mpa_id, release_date, duration) " +
-            "VALUES (?, ?, ?, ?, ?) ";
-    private final String UPDATE_FILM_QUERY = "UPDATE film SET name = ?," +
-            " description = ?," +
-            " mpa_id = ? ," +
-            " release_date = ?," +
-            " duration = ?" +
-            " WHERE id = ?;";
-    private final String GET_FILM_QUERY = "SELECT * FROM film WHERE id = ?;";
 
     public FilmDbStorage(JdbcTemplate jdbc, RowMapper<Film> rowMapper) {
         super(jdbc, rowMapper);
@@ -49,7 +38,7 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
     }
 
     @Override
-    public void deleteLike(int film_id, long userId) {
+    public void deleteLike(int filmId, long userId) {
         String sqlQuery = "DELETE FROM \"like\" WHERE USER_ID = ?";
         jdbc.update(sqlQuery, userId);
     }
@@ -86,7 +75,8 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
 
     @Override
     public List<Film> getFilms() {
-        return findAll(GET_ALL_FILMS_QUERY);
+        String getFilmQuery = "SELECT * FROM film;";
+        return findAll(getFilmQuery);
     }
 
     @Override
@@ -102,7 +92,9 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
                                 .toLocalDate()))) {
             throw new ValidationException("Дата релиза не может быть ранеьше 1895г 28 дек");
         }
-        int filmid = (int) insert(POST_FILM_QUERY,
+        String postFilmQuery = "INSERT INTO film(name, description, mpa_id, release_date, duration) " +
+                "VALUES (?, ?, ?, ?, ?) ";
+        int filmid = (int) insert(postFilmQuery,
                 film.getName(),
                 film.getDescription(),
                 film.getMpa().getId(),
@@ -110,12 +102,18 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
                 String.valueOf(film.getDuration()));
         film.setId(filmid);
         insertFilmGenre(film);
-        return getFilm((int) filmid);
+        return getFilm(filmid);
     }
 
     @Override
     public Film updateFilm(Film film) {
-        update(UPDATE_FILM_QUERY, film.getName(),
+        String updateFilmQuery = "UPDATE film SET name = ?," +
+                " description = ?," +
+                " mpa_id = ? ," +
+                " release_date = ?," +
+                " duration = ?" +
+                " WHERE id = ?;";
+        update(updateFilmQuery, film.getName(),
                 film.getDescription(),
                 film.getMpa().getId(),
                 Date.from(film.getReleaseDate().atStartOfDay(ZoneId.systemDefault()).toInstant()),
@@ -150,7 +148,8 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
 
     @Override
     public Film getFilm(int filmId) {
-       return findOne(GET_FILM_QUERY, filmId).get();
+        String getGetFilmQuery = "SELECT * FROM film WHERE id = ?;";
+        return findOne(getGetFilmQuery, filmId).get();
     }
 
 }

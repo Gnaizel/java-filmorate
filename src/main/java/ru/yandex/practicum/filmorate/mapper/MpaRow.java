@@ -1,9 +1,10 @@
 package ru.yandex.practicum.filmorate.mapper;
 
-import ru.yandex.practicum.filmorate.enums.film.MPA;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.enums.film.MPA;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
