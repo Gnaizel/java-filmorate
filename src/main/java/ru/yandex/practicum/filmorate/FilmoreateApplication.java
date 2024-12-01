@@ -6,11 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FilmoreateAplication {
-    private static final Logger log = LoggerFactory.getLogger(FilmoreateAplication.class);
+public class FilmoreateApplication {
+    private static final Logger log = LoggerFactory.getLogger(FilmoreateApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(FilmoreateAplication.class, args);
+        SpringApplication.run(FilmoreateApplication.class, args);
         log.info("Программа запущена");
     }
 }
