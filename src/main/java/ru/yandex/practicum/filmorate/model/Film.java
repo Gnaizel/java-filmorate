@@ -23,6 +23,5 @@ public class Film {
     MPA mpa;
     @NotNull
     LocalDate releaseDate;
-    @NonNull
     int duration;
 }
