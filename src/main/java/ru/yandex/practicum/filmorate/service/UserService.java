@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.SqlNotFaund;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -29,7 +30,7 @@ public class UserService {
 
     public User deleteFriend(long userId, long friendId) {
         if (userStorage.findUser(friendId) == null) {
-            throw new ValidationException("Другалёк потерялся");
+            throw new SqlNotFaund("Другалёк потерялся");
         } else {
             friendStorage.removeFriend(userId, friendId);
             return userStorage.findUser(friendId);

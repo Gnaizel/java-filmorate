@@ -2,8 +2,10 @@ package ru.yandex.practicum.filmorate.storage.user.friend.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.friend.FriendStorage;
 
@@ -21,9 +23,13 @@ public class FriendDbStorage implements FriendStorage {
 
     @Override
     public long addFriend(long userId, long friendId) {
-        String sql = "INSERT INTO friend(USER_ID, FRIEND_ID) VALUES (?, ?)";
-        jdbc.update(sql, userId, friendId);
-        return friendId;
+        try {
+            String sql = "INSERT INTO friend(USER_ID, FRIEND_ID) VALUES (?, ?)";
+            jdbc.update(sql, userId, friendId);
+            return friendId;
+        } catch (DataAccessException e) {
+            throw new ValidationException(e.getMessage()) ;
+        }
     }
 
     @Override

@@ -18,6 +18,12 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
+    public Map<String, String> sqlNotFound(SqlNotFaund e) {
+        return Map.of("Ошибка валидации ID ", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
     public Map<String, String> noFoundFilm(NotFoundFilmId e) {
         return Map.of("Ошибка валидации ID ", e.getMessage());
     }
