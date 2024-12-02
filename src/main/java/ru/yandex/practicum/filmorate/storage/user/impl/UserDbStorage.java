@@ -2,10 +2,12 @@ package ru.yandex.practicum.filmorate.storage.user.impl;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundUserId;
+import ru.yandex.practicum.filmorate.exception.NotFriends;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.BaseDbStorage;
@@ -42,6 +44,65 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
             throw new NotFoundUserId("USER_ID_NOT_FOUND");
         }
         return user.get();
+    }
+
+
+    @Override
+    public User addFriend(long userId, long friendId) {
+        try {
+            String sql = "INSERT INTO friend(USER_ID, FRIEND_ID) VALUES (?, ?)";
+            jdbc.update(sql, userId, friendId);
+            return findUser(friendId);
+        } catch (DataAccessException e) {
+            throw new NotFoundUserId(e.getMessage());
+        }
+    }
+
+    @Override
+    public Set<User> getCommonFriends(long id, long friendId) {
+        String sqlQuery = "SELECT * FROM USERS " +
+                "WHERE ID IN (" +
+                "SELECT F.FRIEND_ID " +
+                "FROM FRIEND AS F " +
+                "JOIN FRIEND AS FF ON F.FRIEND_ID = FF.FRIEND_ID " +
+                "WHERE F.USER_ID = ?" +
+                "AND FF.USER_ID = ?);";
+
+        return new HashSet<>(findAll(sqlQuery, id, friendId));
+    }
+
+    @Override
+    public Set<User> getFriendsById(long id) {
+        String sql = "SELECT u.* FROM friend f JOIN USERS U on U.ID = f.FRIEND_ID WHERE f.USER_ID = ? ;";
+        return new HashSet<>(findAll(sql, id));
+    }
+
+//    @Override
+//    public User removeFriend(long id, long friendId) {
+//        getFriendsById(id).contains()
+//        String sql = "DELETE FROM friend WHERE USER_ID = ? AND FRIEND_ID = ?";
+//        jdbc.update(sql, id, friendId);
+//        return findUser(friendId);
+//    }
+
+    @Override
+    public User removeFriend(long id, long friendId) {
+        findUser(friendId);
+        findUser(id);
+        // Проверяем, существует ли дружба
+        if (isFriend(id, friendId)) {
+            String sql = "DELETE FROM friend WHERE USER_ID = ? AND FRIEND_ID = ?";
+            jdbc.update(sql, id, friendId);
+            return findUser(friendId);
+        } else {
+            throw new NotFriends("Ползователи не являются друзяами");
+        }
+    }
+
+    private boolean isFriend(long userId, long friendId) {
+        String sql = "SELECT COUNT(*) FROM friend WHERE USER_ID = ? AND FRIEND_ID = ?";
+        int count = jdbc.queryForObject(sql, Integer.class, userId, friendId);
+        return count > 0;
     }
 
     @Override

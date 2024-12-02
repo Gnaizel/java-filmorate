@@ -15,4 +15,12 @@ public interface UserStorage {
     User createUser(User user);
 
     Set<User> getUsers();
+
+    User addFriend(long userId, long friendId);
+
+    User removeFriend(long userId, long friendId);
+
+    Set<User> getFriendsById(long id);
+
+    Set<User> getCommonFriends(long id, long friendId);
 }

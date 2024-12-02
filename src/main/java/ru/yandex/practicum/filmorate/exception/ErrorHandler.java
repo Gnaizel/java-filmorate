@@ -16,6 +16,12 @@ public class ErrorHandler {
         return Map.of("Ошибка валидации ", e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler
+    public Map<String, String> notFriends(NotFriends e) {
+        return Map.of("Ошибка валидации ID", e.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
     public Map<String, String> sqlNotFound(SqlNotFaund e) {

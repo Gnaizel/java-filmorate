@@ -23,6 +23,26 @@ public class InMemoryUserStorage implements UserStorage {
         return new HashSet<>(users.values());
     }
 
+    @Override
+    public User addFriend(long userId, long friendId) {
+        return null;
+    }
+
+    @Override
+    public User removeFriend(long userId, long friendId) {
+        return null;
+    }
+
+    @Override
+    public Set<User> getFriendsById(long id) {
+        return Set.of();
+    }
+
+    @Override
+    public Set<User> getCommonFriends(long id, long friendId) {
+        return Set.of();
+    }
+
     public List<User> findUsersById(Set<Long> ids) {
         return ids.stream()
                 .map(users::get)

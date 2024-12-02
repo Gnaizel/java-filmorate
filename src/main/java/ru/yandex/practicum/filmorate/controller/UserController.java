@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.SqlNotFaund;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -16,7 +15,7 @@ import java.util.Set;
 public class UserController {
 
     private final UserService userService;
-    private int co = 0;
+    private final int co = 0;
 
     @GetMapping("/{id}")
     public User getUserForId(@PathVariable long id) {
@@ -45,8 +44,8 @@ public class UserController {
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public User deleteFriend(@PathVariable long id, @PathVariable long friendId) {
-        if (co == 3) throw new SqlNotFaund("not faund");
-        co++;
+//        if (co == 3) throw new SqlNotFaund("not faund");
+//        co++;
         return userService.deleteFriend(id, friendId);
     }
 
